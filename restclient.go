@@ -96,7 +96,7 @@ func DecodeJson(r *http.Response, into interface{}) error {
 
 		}
 
-		return errors.New(fmt.Sprintf("%s: %s", responseError.Error.Error, responseError.Error.ErrorDescription))
+		return errors.New(fmt.Sprintf("AniList API error: %s, %s", responseError.Error.Error, responseError.Error.ErrorDescription))
 
 	}
 
