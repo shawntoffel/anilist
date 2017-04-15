@@ -1,7 +1,6 @@
 package anilist
 
 import (
-	"fmt"
 	"github.com/google/go-querystring/query"
 )
 
@@ -40,8 +39,6 @@ func (a *anilist) BrowseAnime(accessToken string, request BrowseAnimeRequest) (B
 	queryString := values.Encode()
 
 	url := BaseUrl + "browse/anime?" + queryString
-
-	fmt.Print(url)
 
 	headers := make(map[string]string)
 	headers["Authorization"] = "Bearer " + accessToken
