@@ -4,12 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
-	"strings"
 )
 
 type ResponseError struct {
-	Errors []string `json:"errors"`
+	Error Error `json:"error"`
+}
+type Error struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
 }
 
 type RestClient interface {
@@ -92,7 +96,7 @@ func DecodeJson(r *http.Response, into interface{}) error {
 
 		}
 
-		return errors.New(strings.Join(responseError.Errors, ", "))
+		return errors.New(fmt.Sprintf("%s: %s", responseError.Error.Error, responseError.Error.ErrorDescription))
 
 	}
 
