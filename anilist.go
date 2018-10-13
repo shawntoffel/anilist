@@ -9,7 +9,11 @@ import (
 
 const BaseUrl = "https://graphql.anilist.co"
 
-type Anilist struct {
+type Anilist interface {
+	Query(Request) (*Response, error)
+}
+
+type anilist struct {
 	Client *http.Client
 }
 
@@ -18,10 +22,10 @@ func New() Anilist {
 }
 
 func NewWithClient(client *http.Client) Anilist {
-	return Anilist{Client: client}
+	return &anilist{Client: client}
 }
 
-func (a Anilist) Query(request Request) (*Response, error) {
+func (a *anilist) Query(request Request) (*Response, error) {
 	marshalled, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
