@@ -1,46 +1,49 @@
 package anilist
 
-type AuthenticationRequest struct {
-	GrantType    string `json:"grant_type"`
-	ClientId     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
+type Request struct {
+	Query     string            `json:"query"`
+	Variables map[string]string `json:"variables,omitempty"`
 }
 
-type AuthenticationResponse struct {
-	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   int    `json:"expires_in"`
-	Expires     int    `json:"expires"`
+type Response struct {
+	Data   Data    `json:"data"`
+	Errors []Error `json:"errors"`
 }
 
-type BrowseAnimeRequest struct {
-	Year          string   `url:"year,omitempty"`
-	Season        string   `url:"season,omitempty"`
-	Type          string   `url:"type,omitempty"`
-	Status        string   `url:"status,omitempty"`
-	Genres        []string `url:"genres,omitempty"`
-	GenresExclude []string `url:"genres_exclude,omitempty"`
-	Sort          string   `url:"sort,omitempty"`
-	AiringData    bool     `url:"airing_data,omitempty"`
-	FullPage      bool     `url:"full_page,omitempty"`
-	Page          int      `url:"page,omitempty"`
+type Data struct {
+	Page Page `json:"page"`
 }
 
-type BrowseAnimeResponse []Anime
+type Media struct {
+	Id     int        `json:"id"`
+	Title  MediaTitle `json:"title"`
+	Type   string     `json:"type"`
+	SitUrl string     `json:"siteUrl"`
+}
 
-type Anime struct {
-	Id            int      `json:"id"`
-	TitleRomaji   string   `json:"title_romaji"`
-	Type          string   `json:"type"`
-	ImageUrlMed   string   `json:"image_url_med"`
-	ImageUrlSml   string   `json:"image_url_sml"`
-	TitleJapanese string   `json:"title_japanese"`
-	TitleEnglish  string   `json:"title_english"`
-	Synonyms      []string `json:"synonyms"`
-	ImageUrlLge   string   `json:"image_url_lge"`
-	AiringStatus  string   `json:"airing_status"`
-	AverageScore  float32  `json:"average_score"`
-	TotalEpisodes int      `json:"total_episodes"`
-	Adult         bool     `json:"adult"`
-	Popularity    int      `json:"popularity"`
+type MediaTitle struct {
+	Romaji string `json:"romaji"`
+}
+
+type Page struct {
+	PageInfo PageInfo `json:"pageInfo"`
+	Media    []Media
+}
+
+type PageInfo struct {
+	Total       int  `json:"total"`
+	PerPage     int  `json:"perPage"`
+	CurrentPage int  `json:"currentPage"`
+	HasNextPage bool `json:"hasNextPage"`
+}
+
+type Error struct {
+	Message   string          `json:"message"`
+	Status    int             `json:"status"`
+	Locations []ErrorLocation `json:"locations"`
+}
+
+type ErrorLocation struct {
+	Line   int `json:"line"`
+	Column int `json:"column"`
 }

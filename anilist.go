@@ -1,49 +1,54 @@
 package anilist
 
 import (
-	"github.com/google/go-querystring/query"
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
 )
 
-var BaseUrl = "https://anilist.co/api/"
+const BaseUrl = "https://graphql.anilist.co"
 
-type anilist struct {
-	Client RestClient
+type Anilist struct {
+	Client *http.Client
 }
 
-type Anilist interface {
-	GetAccessToken(AuthenticationRequest) (AuthenticationResponse, error)
-	BrowseAnime(accessToken string, request BrowseAnimeRequest) (BrowseAnimeResponse, error)
+func New() Anilist {
+	return NewWithClient(&http.Client{})
 }
 
-func NewAnilistClient() Anilist {
-	restClient := NewRestClient()
-
-	return &anilist{restClient}
+func NewWithClient(client *http.Client) Anilist {
+	return Anilist{Client: client}
 }
 
-func (a *anilist) GetAccessToken(request AuthenticationRequest) (AuthenticationResponse, error) {
-	response := AuthenticationResponse{}
+func (a Anilist) Query(request Request) (*Response, error) {
+	marshalled, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
 
-	var headers map[string]string
+	req, err := http.NewRequest("POST", BaseUrl, bytes.NewBuffer(marshalled))
+	if err != nil {
+		return nil, err
+	}
 
-	err := a.Client.Post(BaseUrl+"auth/access_token", headers, request, &response)
+	req.Header.Add("Content-Type", "application/json")
 
-	return response, err
-}
+	resp, err := a.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 
-func (a *anilist) BrowseAnime(accessToken string, request BrowseAnimeRequest) (BrowseAnimeResponse, error) {
-	response := BrowseAnimeResponse{}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
-	values, _ := query.Values(request)
+	response := &Response{}
+	err = json.Unmarshal(body, response)
+	if err != nil {
+		return nil, err
+	}
 
-	queryString := values.Encode()
-
-	url := BaseUrl + "browse/anime?" + queryString
-
-	headers := make(map[string]string)
-	headers["Authorization"] = "Bearer " + accessToken
-
-	err := a.Client.Get(url, headers, &response)
-
-	return response, err
+	return response, nil
 }
