@@ -15,10 +15,10 @@ type Data struct {
 }
 
 type Media struct {
-	Id     int        `json:"id"`
-	Title  MediaTitle `json:"title"`
-	Type   string     `json:"type"`
-	SitUrl string     `json:"siteUrl"`
+	Id      int        `json:"id"`
+	Title   MediaTitle `json:"title"`
+	Type    string     `json:"type"`
+	SiteUrl string     `json:"siteUrl"`
 }
 
 type MediaTitle struct {
