@@ -1,8 +1,8 @@
 package anilist
 
 type Request struct {
-	Query     string            `json:"query"`
-	Variables map[string]string `json:"variables,omitempty"`
+	Query     string                 `json:"query"`
+	Variables map[string]interface{} `json:"variables,omitempty"`
 }
 
 type Response struct {
@@ -19,6 +19,8 @@ type Media struct {
 	Title   MediaTitle `json:"title"`
 	Type    string     `json:"type"`
 	SiteUrl string     `json:"siteUrl"`
+	Format  string     `json:"format"`
+	Status  string     `json:"status"`
 }
 
 type MediaTitle struct {
