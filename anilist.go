@@ -2,6 +2,7 @@ package anilist
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 const BaseUrl = "https://graphql.anilist.co"
 
 type Anilist interface {
-	Query(Request) (*Response, error)
+	Query(context.Context, Request) (*Response, error)
 }
 
 type anilist struct {
@@ -25,13 +26,13 @@ func NewWithClient(client *http.Client) Anilist {
 	return &anilist{Client: client}
 }
 
-func (a *anilist) Query(request Request) (*Response, error) {
+func (a *anilist) Query(ctx context.Context, request Request) (*Response, error) {
 	marshalled, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", BaseUrl, bytes.NewBuffer(marshalled))
+	req, err := http.NewRequestWithContext(ctx, "POST", BaseUrl, bytes.NewBuffer(marshalled))
 	if err != nil {
 		return nil, err
 	}
