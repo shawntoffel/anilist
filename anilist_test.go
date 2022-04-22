@@ -26,7 +26,7 @@ func TestIntegration(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		t.Log(response)
+		t.Logf("%+v", response)
 
 		if !response.Data.Page.PageInfo.HasNextPage {
 			break

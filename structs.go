@@ -15,12 +15,13 @@ type Data struct {
 }
 
 type Media struct {
-	Id      int        `json:"id"`
-	Title   MediaTitle `json:"title"`
-	Type    string     `json:"type"`
-	SiteUrl string     `json:"siteUrl"`
-	Format  string     `json:"format"`
-	Status  string     `json:"status"`
+	Id       int        `json:"id"`
+	Title    MediaTitle `json:"title"`
+	Type     string     `json:"type"`
+	SiteUrl  string     `json:"siteUrl"`
+	Format   string     `json:"format"`
+	Status   string     `json:"status"`
+	Episodes int        `json:"episodes"`
 }
 
 type MediaTitle struct {
